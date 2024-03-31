@@ -30,7 +30,7 @@ reads <- reads[, -1]
 reads <- as.matrix(reads)
 
 cell_lines <- gsub("(.*)\\.r\\d\\..*", "\\1", colnames(reads))
-cell_ind <- 1
+cell_ind <- 2
 ind_cell_one <- cell_lines == sort(unique(cell_lines))[[cell_ind]]
 
 reads <- reads[, ind_cell_one]
