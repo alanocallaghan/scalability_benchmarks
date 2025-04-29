@@ -27,7 +27,8 @@ rm_df <- do_de(
     rm_df,
     ref_df = ref_df_rm,
     match_column = "proportion_retained",
-    data_dims
+    data_dims,
+    mc.cores = 12
 )
 
 mdf_rm <- reshape2::melt(
@@ -50,17 +51,21 @@ mdf_rm$proportion_retained <- factor(
 
 # mdf_rm_sub <- mdf_rm[mdf_rm$data == "zeisel", ]
 mdf_rm_sub <- mdf_rm[mdf_rm$data == "chen", ]
+mdf_rm_sub <- mdf_rm_sub[mdf_rm_sub$variable %in% c("mu", "epsilon"), ]
+mdf_rm_sub$variable <- droplevels(mdf_rm_sub$variable)
+levels(mdf_rm_sub$variable) <- c("Mean", "Residual over-dispersion")
+
 
 g <- ggplot(mdf_rm_sub) +
     aes(x = factor(round(cells_retained)), y = value, color = variable) +
     geom_quasirandom(dodge.width = 0.25, size = 0.7, groupOnX = TRUE) +
-    scale_color_brewer(name = "Parameter", palette = "Set1") +
+    scale_color_brewer(name = "Parameter", palette = "Dark2") +
     # scale_x_reverse("Number of cells") +
     # facet_wrap(~data) +
     scale_y_continuous(labels = scales::percent) +
     labs(
         x = "Number of cells in dataset",
-        y = "Portion of genes differentially expressed"
+        y = "Spuriously differentially expressed genes"
     ) +
     theme(
         axis.text.x = element_text(hjust = 1, angle = 45),
@@ -69,3 +74,4 @@ g <- ggplot(mdf_rm_sub) +
     )
 
 ggsave("figs/removing_cells.pdf", width = 5, height = 4)
+save.image("rdata/removing_cells.RData")

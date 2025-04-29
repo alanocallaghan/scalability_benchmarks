@@ -17,14 +17,8 @@ if [ -f "/etc/profile.d/modules.sh" ]; then
     module load roslin/gcc/7.3.0
 fi
 
-set -eu                                                                                                                                                                   
-if [ -f ~/miniconda3/etc/profile.d/conda.sh ]; then                                                                                                                       
-    source ~/miniconda3/etc/profile.d/conda.sh                                                                                                                            
-fi                                                                                                                                                                        
-set +eu
-
-conda create -y -n scalability \
-    r-base=4.3.2 \
+mamba create -y -n scalability2 \
+    r-base=4.1.1 \
     r-argparse \
     r-curl \
     r-httr \
@@ -41,13 +35,19 @@ conda create -y -n scalability \
     r-ggpointdensity \
     r-rcpparmadillo \
     r-ggrastr \
-    bioconductor-scrnaseq \
-    bioconductor-basics \
-    bioconductor-basicstan \
-    bioconductor-biocparallel \
-    bioconductor-scater \
-    bioconductor-scran \
-    bioconductor-singlecellexperiment
+    r-patchwork \
+    bioconductor-scrnaseq
+    # bioconductor-basics \
+    # bioconductor-scater \
+    # bioconductor-scran \
+    # bioconductor-singlecellexperiment \
 
-conda init
-conda activate scalability
+
+## also need to devtools::install_github some stuff
+
+conda activate scalability2
+Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", "SingleCellExperiment", "scRNAseq"), version=3.14)'
+
+Rscript -e 'devtools::install_github("catavallejos/BASiCS", ref="11a03083be88d9900a168cd4ef7f41367f6fa4ed")'
+Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan", ref="9e632610cf463c51d3856d763a89f555dc3c114c")'
+Rscript -e 'devtools::install_github("jorainer/ensembldb")'

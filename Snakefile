@@ -26,6 +26,8 @@ rule all:
         "figs/dropout_density.pdf",
         "figs/true_positives.pdf",
         "figs/time_plot.pdf",
+        "figs/divide_and_conquer_schematic.pdf",
+        "figs/accuracy_plots.pdf",
         "figs/removing_cells.pdf",
         "figs/cell_splitting.pdf",
         "figs/downsampling.pdf",
@@ -54,6 +56,19 @@ rule all:
             "figs/hpd/{dataset}",
             dataset = data
         )
+
+
+rule extra_plots:
+    resources: mem_mb=50000, runtime=10000
+    input: main_done.RData
+    output:
+        "figs/divide_and_conquer_schematic.pdf"
+        "figs/accuracy_plots.pdf",
+    shell:
+        """
+        Rscript src/analysis/divide_and_conquer_schematic.R
+        Rscript src/analysis/merged_figures.R
+        """
 
 
 rule plots: ## todo
@@ -110,6 +125,7 @@ rule plots: ## todo
         """
         Rscript src/analysis/main.R
         """
+
 
 # rule identifiability_plot:
 #     input: 

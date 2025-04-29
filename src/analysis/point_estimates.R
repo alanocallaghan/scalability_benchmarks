@@ -92,3 +92,4 @@ ggsave(gs[[3]],
     file = "figs/point_estimates_epsilon.pdf",
     width = 6, height = 4.5
 )
+save.image("rdata/point_estimates.RData")

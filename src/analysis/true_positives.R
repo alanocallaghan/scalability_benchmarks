@@ -29,19 +29,22 @@ pos_metadata_advi <- data.frame(
 )
 pos_metadata <- rbind(pos_metadata, pos_metadata_advi)
 
-pos_metadata$test <- lapply(seq_along(pos_metadata$file),
+pos_metadata$test <- parallel::mclapply(seq_along(pos_metadata$file),
     function(i) {
         cat(i, "/", nrow(pos_metadata), "\n")
         readRDS(pos_metadata$file[[i]])$test
-    }
+    }, mc.cores = 12
 )
+
 params <- c("Mean", "Disp", "ResDisp")
 pg <- paste0(params, "Gene")
 pos_metadata[, pg] <- NA
+
 pos_metadata[, pg] <- lapply(
     pos_metadata[, pg],
     function(x) rep(list(), length(x))
 )
+
 
 for (i in seq_len(nrow(pos_metadata))) {
     cat(i, "/", nrow(pos_metadata), "\n")
@@ -60,22 +63,25 @@ for (i in seq_len(nrow(pos_metadata))) {
         pos_metadata[[i, pg[[j]]]] <- list(df[[j]])
     }
 }
+pos_metadata$test <- NULL
 
 ref <- pos_metadata[which(pos_metadata$nsubsets == 1), ]
-pos_metadata_test <- pos_metadata[pos_metadata$nsubsets != 1, ]
+pos_metadata <- pos_metadata[pos_metadata$nsubsets != 1, ]
 jp <- paste0(params, "Jaccard")
-pos_metadata_test[, jp] <- NA
-for (i in seq_len(nrow(pos_metadata_test))) {
-    cat(i, "/", nrow(pos_metadata_test), "\n")
+pos_metadata[, jp] <- NA
+for (i in seq_len(nrow(pos_metadata))) {
+    cat(i, "/", nrow(pos_metadata), "\n")
     for (j in seq_along(jp)) {
-        pos_metadata_test[i, jp[[j]]] <- jaccard(
+        pos_metadata[i, jp[[j]]] <- jaccard(
             ref[[1, pg[[j]]]][[1]],
-            pos_metadata_test[[i, pg[[j]]]][[1]]
+            pos_metadata[[i, pg[[j]]]][[1]]
         )
     }
 }
 
-jd <- pos_metadata_test[, c("nsubsets", jp)]
+
+
+jd <- pos_metadata[, c("nsubsets", jp)]
 mdf_tp <- reshape2::melt(jd, id.var = "nsubsets")
 mdf_tp$variable <- gsub("Jaccard", "", mdf_tp$variable)
 mdf_tp$nsubsets <- factor(
@@ -95,6 +101,9 @@ mdf_tp$variable <- factor(
     mdf_tp$variable,
     levels = c("mu", "delta", "epsilon")
 )
+mdf_tp <- mdf_tp[mdf_tp$variable %in% c("mu", "epsilon"), ]
+mdf_tp$variable <- droplevels(mdf_tp$variable)
+levels(mdf_tp$variable) <- c("Mean", "Residual over-dispersion")
 
 
 ## Mean-variance curves and DE plots for worst for each data
@@ -114,18 +123,20 @@ g <- ggplot() +
     geom_quasirandom(
         data = mdf_tp,
         aes(nsubsets, y = value, colour = variable),
-        dodge.width = 0.3, size = 0.8, width = 0.1, groupOnX = TRUE
+        dodge.width = 0.3, size = 0.7, width = 0.1, groupOnX = TRUE
     ) +
     geom_hline(
         data = mdf_tp_advi,
         linetype = "dashed",
-        aes(colour = variable, yintercept = value)
+        aes(colour = variable, yintercept = value),
+        show_guide=FALSE,
     ) +
-    labs(x = "Number of partitions", y = "Jaccard Index") +
+    labs(x = "Number of subsets", y = "Jaccard Index") +
     ylim(0, 1) +
-    scale_color_brewer(palette = "Set1", name = "Parameter") +
+    scale_color_brewer(palette = "Dark2", name = "Parameter") +
     theme_bw() +
     theme(legend.position = "bottom") +
     theme(panel.grid = element_blank())
 
 ggsave(file = "figs/true_positives.pdf", width = 5, height = 3.5)
+save.image("rdata/true_positives.RData")

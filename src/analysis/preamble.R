@@ -28,7 +28,7 @@ colnames(data_dims) <- c("nGenes", "nCells")
 data_dims[["data"]] <- datasets
 data_dims[["libsize"]] <- vapply(datasets,
     function(x) {
-        mean(colSums(counts(readRDS(paste0("rdata/", x, ".rds")))))
+        median(colSums(counts(readRDS(paste0("rdata/", x, ".rds")))))
     },
     numeric(1)
 )

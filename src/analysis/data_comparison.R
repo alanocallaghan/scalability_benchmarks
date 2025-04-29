@@ -45,7 +45,7 @@ scale <- scale_color_brewer(
 
 
 g1 <- ggplot(data_df, aes(x = lib_sizes, color = name, fill = name)) +
-    labs(x = "Library size", y = "Density") +
+    labs(x = "Total counts per cell", y = "Density") +
     scale +
     geom_density(alpha = 0.2) +
     theme(
@@ -57,7 +57,7 @@ ggsave("figs/libsize_density.pdf", width = 5, height = 4)
 
 
 g2 <- ggplot(data_df, aes(x = num_feats, color = name, fill = name)) +
-    labs(x = "Number of expressed features", y = "Density") +
+    labs(x = "Number of expressed features per cell", y = "Density") +
     scale +
     geom_density(alpha = 0.2) +
     theme(
@@ -83,8 +83,8 @@ l <- lapply(names(datas),
 )
 data_df <- do.call(rbind, l)
 
-g1 <- ggplot(data_df, aes(x = mean_expression, color = name, fill = name)) +
-    labs(x = "Mean expression", y = "Density") +
+g3 <- ggplot(data_df, aes(x = mean_expression, color = name, fill = name)) +
+    labs(x = "Mean count per gene", y = "Density") +
     scale +
     geom_density(alpha = 0.2) +
     theme(
@@ -94,8 +94,8 @@ g1 <- ggplot(data_df, aes(x = mean_expression, color = name, fill = name)) +
     scale_x_log10()
 ggsave("figs/expression_density.pdf", width = 5, height = 4)
 
-g2 <- ggplot(data_df, aes(x = dropout, color = name, fill = name)) +
-    labs(x = "Proportion of zeros", y = "Density") +
+g4 <- ggplot(data_df, aes(x = dropout, color = name, fill = name)) +
+    labs(x = "Proportion of zeros per gene", y = "Density") +
     scale +
     theme(
         legend.position = "bottom",
@@ -107,3 +107,11 @@ ggsave("figs/dropout_density.pdf", width = 5, height = 4)
 
 ggp <- plot_with_legend_below(g1, g2, rel_heights = c(0.9, 0.1))
 ggsave("figs/gene_plots.pdf", width = 7, height = 4)
+
+
+library("patchwork")
+(g1 + g2) / (g3 + g4) + plot_layout(guides="collect") +
+    plot_annotation(tag_level="A") &
+    theme(legend.position="bottom")
+
+ggsave("figs/data_plots.pdf", width = 7, height = 5)

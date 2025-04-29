@@ -28,10 +28,13 @@ cs_df <- merge(cs_df, data_dims)
 cs_de_df <- do_de(cs_df, ref_df = references, match_column = "data", data_dims,
   mc.cores = 2)
 
+cs_de_df$chain <- NULL
 cs_de_df$data <- gsub("([\\w])([\\w]+)", "\\U\\1\\L\\2", cs_de_df$data, perl = TRUE)
 cs_de_df_sub <- cs_de_df[, c("data", "chains", "pDiffExp", "pDiffDisp", "pDiffResDisp")]
 mdf_cs <- melt(cs_de_df_sub, id.vars = c("data", "chains"))
 mdf_cs$chains <- factor(mdf_cs$chains, levels = c(2, 4, 8, 16))
+levels(mdf_cs$variable) <- c("mu", "delta", "epsilon")
+
 
 g <- ggplot(mdf_cs) +
     aes(x = chains, colour = variable, y = value) +
@@ -39,9 +42,7 @@ g <- ggplot(mdf_cs) +
     facet_wrap(~data) +
     scale_colour_brewer(
         name = "Parameter",
-        palette = "Set1",
-        # limits = c("pDiffExp", "pDiffDisp", "pDiffResDisp"),
-        labels = c("mu", "delta", "epsilon")
+        palette = "Set1"
     ) +
     labs(x = "Number of partitions") +
     scale_y_continuous(
@@ -54,3 +55,4 @@ g <- ggplot(mdf_cs) +
     )
 
 ggsave("figs/cell_splitting.pdf", width = 5, height = 5)
+save.image("rdata/cell_splitting.RData")
