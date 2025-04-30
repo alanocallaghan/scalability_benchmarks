@@ -635,8 +635,6 @@ rule norm_plot:
 rule data:
     resources:
         mem_mb=10000
-    input:
-        "src/data/{dataset}.R"
     output:
         "rdata/{dataset}.rds"
     shell:
