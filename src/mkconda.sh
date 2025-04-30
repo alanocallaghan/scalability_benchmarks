@@ -13,3 +13,5 @@ Rscript -e 'install.packages("patchwork")'
 
 conda env create -n scalability-datasets -f data-env.yml
 conda env create -n scalability-plotting -f plotting-env.yml
+conda activate scalability-plotting
+Rscript -e 'install.packages("Cairo")'
