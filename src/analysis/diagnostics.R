@@ -104,7 +104,7 @@ for (measure in c("ess", "geweke.diag")) {
     names(gs) <- c("mu", "delta", "epsilon")
     for (param in names(gs)) {
         ggsave(gs[[param]],
-            file = sprintf("figs/%s_%s_all.pdf", gsub("\\.", "_", measure), param),
+            file = sprintf("figs/%s_%s_all.pdf", gsub("\\..*", "", measure), param),
             width = 5, height = 4
         )
     }
