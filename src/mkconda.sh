@@ -11,4 +11,5 @@ Rscript -e 'devtools::install_github("jorainer/ensembldb", ref="058be8a")'
 Rscript -e 'devtools::install_github("Bioconductor/BiocFileCache", ref="004cb8e")'
 Rscript -e 'install.packages("patchwork")'
 
-conda env create -n datasets -f data-env.yml
+conda env create -n scalability-datasets -f data-env.yml
+conda env create -n scalability-plotting -f plotting-env.yml

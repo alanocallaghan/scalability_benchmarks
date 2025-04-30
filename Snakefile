@@ -31,10 +31,10 @@ rule all:
         "figs/removing_cells.pdf",
         "figs/cell_splitting.pdf",
         "figs/downsampling.pdf",
-        "figs/elbo/tung.pdf",
-        "figs/elbo/buettner.pdf",
-        "figs/elbo/zeisel.pdf",
-        "figs/elbo/chen.pdf",
+        "figs/elbo_tung.pdf",
+        "figs/elbo_buettner.pdf",
+        "figs/elbo_zeisel.pdf",
+        "figs/elbo_chen.pdf",
         "figs/fixnu-chen.pdf",
         "figs/fixnu-ibarra-soria.pdf",
         "figs/hpd_width_mu.pdf",
@@ -46,12 +46,12 @@ rule all:
         "figs/point_estimates_epsilon.pdf",
         "tables/data-summary.tex",
         "tables/hmc-comparison.tex",
-        "figs/ess/mu_all.pdf",
-        "figs/ess/delta_all.pdf",
-        "figs/ess/epsilon_all.pdf",
-        "figs/geweke_diag/mu_all.pdf",
-        "figs/geweke_diag/delta_all.pdf",
-        "figs/geweke_diag/epsilon_all.pdf",
+        "figs/ess_mu_all.pdf",
+        "figs/ess_delta_all.pdf",
+        "figs/ess_epsilon_all.pdf",
+        "figs/geweke_mu_all.pdf",
+        "figs/geweke_delta_all.pdf",
+        "figs/geweke_epsilon_all.pdf",
         expand(
             "figs/hpd/{dataset}",
             dataset = data
@@ -60,12 +60,13 @@ rule all:
 
 rule extra_plots:
     resources: mem_mb=50000, runtime=10000
-    input: main_done.RData
+    input: "main_done.RData"
     output:
         "figs/divide_and_conquer_schematic.pdf"
         "figs/accuracy_plots.pdf",
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/divide_and_conquer_schematic.R
         Rscript src/analysis/merged_figures.R
         """
@@ -123,6 +124,7 @@ rule plots: ## todo
         "main_done.RData"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/main.R
         """
 
@@ -149,6 +151,7 @@ rule scran_basics:
         "figs/scran_basics.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/scran_basics.R
         """
 
@@ -169,6 +172,7 @@ rule true_positive_plot:
         "figs/true_positives.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/true_positives.R
         """
 
@@ -182,6 +186,7 @@ rule hpd_comparison_plot:
         directory("figs/hpd/{dataset}")
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/hpd_comparison.R \
             -d {wildcards.dataset}
         """
@@ -206,6 +211,7 @@ rule removing_cells_plot:
         "figs/removing_cells.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/removing_cells.R
         """
 
@@ -228,6 +234,7 @@ rule downsampling_plot:
         "figs/downsampling.pdf"
     shell: 
         """
+        conda activate scalability-plotting
         Rscript src/analysis/downsampling.R
         """
 
@@ -249,6 +256,7 @@ rule time_plot:
         "figs/time_plot.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/time_plot.R
         """
 
@@ -265,6 +273,7 @@ rule data_comparison:
         "figs/libsize_density.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/data_comparison.R
         """
 
@@ -480,6 +489,7 @@ rule cell_plot:
         "figs/cell_splitting.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript ./src/analysis/cell_splitting_plot.R
         """
 
@@ -494,6 +504,7 @@ rule plot_fixnu:
         "figs/fixnu-diff-{dataset}.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript ./src/analysis/plot_fix_nu.R -f {input.fix} -v {input.var} -d {wildcards.dataset}
         """
 
@@ -535,6 +546,7 @@ rule point_estimates_plot:
         "figs/point_estimates_epsilon.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/point_estimates.R
         """
 
@@ -560,6 +572,7 @@ rule hpd_width_plot:
         "figs/hpd_width_epsilon.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/hpd.R
         """
 
@@ -582,14 +595,15 @@ rule diag_plot:
             seed  = seeds
         )
     output:
-        "figs/ess/mu_all.pdf",
-        "figs/ess/delta_all.pdf",
-        "figs/ess/epsilon_all.pdf",
-        "figs/geweke_diag/mu_all.pdf",
-        "figs/geweke_diag/delta_all.pdf",
-        "figs/geweke_diag/epsilon_all.pdf"
+        "figs/ess_mu_all.pdf",
+        "figs/ess_delta_all.pdf",
+        "figs/ess_epsilon_all.pdf",
+        "figs/geweke_mu_all.pdf",
+        "figs/geweke_delta_all.pdf",
+        "figs/geweke_epsilon_all.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/diagnostics.R
         """
 
@@ -614,6 +628,7 @@ rule norm_plot:
         "figs/norm_plot_hpd.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/normalisation_comparison.R
         """
 
@@ -641,9 +656,10 @@ rule elbo_plots:
             allow_missing = True
         )
     output:
-        "figs/elbo/{dataset}.pdf"
+        "figs/elbo_{dataset}.pdf"
     shell:
         """
+        conda activate scalability-plotting
         Rscript src/analysis/elbo_plots.R
         """
 
