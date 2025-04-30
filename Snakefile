@@ -69,6 +69,7 @@ rule extra_plots:
         conda activate scalability-plotting
         Rscript src/analysis/divide_and_conquer_schematic.R
         Rscript src/analysis/merged_figures.R
+        . ./src/analysis/copy_figs_for_paper.sh
         """
 
 

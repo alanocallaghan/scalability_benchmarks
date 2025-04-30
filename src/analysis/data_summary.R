@@ -19,7 +19,7 @@ df <- data.frame(Dataset = gsub("rdata/", "", sces))
 # df$Dataset <- gsub("([\\w])([\\w]+)", "\\U\\1\\L\\2", df$Dataset, perl = TRUE)
 df$Dataset <- NULL
 df$"Original publication" <- c("Buettner2015", "Chen2017a", "Ibarra-Soria2018", "Tung2017", "Zeisel2015")
-df$"Original publication" <- paste0("\\cite{", df$"Original publication", "}")
+df$"Original publication" <- paste0("\\citet{", df$"Original publication", "}")
 df <- cbind(df, as.data.frame(do.call(rbind, dims)))
 colnames(df)[2:3] <- c("Genes", "Cells")
 df$"Cell type" <- c("T (G2M only)", "Astrocytes", "Mesoderm", "iPSC", "CA1+ pyramidal")
