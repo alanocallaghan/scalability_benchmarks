@@ -4,11 +4,11 @@ if [ -f "/etc/profile.d/modules.sh" ]; then
 
     . /etc/profile.d/modules.sh
 
-    module load phys/compilers/gcc/10.2.0
+    # module load phys/compilers/gcc/10.2.0
 
-    export C_INCLUDE_PATH=/exports/igmm/software/pkg/el7/apps/hdf5/1.8.13/include
+    # export C_INCLUDE_PATH=/exports/igmm/software/pkg/el7/apps/hdf5/1.8.13/include
 
-    module load roslin/gcc/7.3.0
+    # module load roslin/gcc/7.3.0
 
 fi
 
