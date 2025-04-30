@@ -42,7 +42,7 @@ reads <- reads[, !(libsize_drop | feature_drop)]
 
 spikes <- rownames(reads)[grep("ERCC", rownames(reads))]
 
-ind_expressed <- rowMeans(reads) >= 5 & rowMeans(reads != 0) > 0.5
+ind_expressed <- rowMeans(reads) >= 1 & rowMeans(reads != 0) > 0.5
 reads <- reads[ind_expressed, ]
 
 

@@ -1,5 +1,6 @@
 library("scran")
 library("scater")
+library("SingleCellExperiment")
 options(timeout = 10000)
 
 if (!file.exists("downloads/rawCounts.tsv")) {

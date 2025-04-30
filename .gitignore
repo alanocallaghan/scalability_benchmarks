@@ -1,5 +1,6 @@
 zeisel50k*
-downloads
+downloads/*
+!downloads/.gitkeep
 packrat/lib*/
 packrat/src
 *.sh.*

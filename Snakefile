@@ -626,6 +626,8 @@ rule data:
         "rdata/{dataset}.rds"
     shell:
         """
+        # the scRNAseq package has changed how online resources are stored, so we need up-to-date versions to retrieve the same data
+        conda activate datasets
         Rscript {input}
         """
 
