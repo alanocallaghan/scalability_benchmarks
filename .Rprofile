@@ -3,5 +3,5 @@ if ("BiocParallel" %in% rownames(utils::installed.packages())) {
     register(SerialParam())
 }
 options(menu.graphics=FALSE)
-options(mc.cores=1)
+options(mc.cores=4)
 options(Ncpus=4)

@@ -57,7 +57,7 @@ plots <- lapply(unique(elbo_df$data),
                 plot.margin = unit(c(0, 0.05, 0, 0.025), "npc")
             )
             labs(x = "Iteration")
-        ggsave(g, file = sprintf("figs/elbo/%s.pdf", d), width = 4, height = 3)
+        ggsave(g, file = sprintf("figs/%s_elbo.pdf", d), width = 4, height = 3)
         g
     }
 )

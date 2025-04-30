@@ -9,7 +9,7 @@ args <- parser$parse_args()
 
 sces <- args[["input"]]
 if (is.null(sces)) {
-    sces <- list.files("rdata", full.names = TRUE)
+    sces <- list.files("rdata", full.names = TRUE, pattern="*.rds")
 }
 
 dims <- lapply(sces, function(x) dim(readRDS(x)))

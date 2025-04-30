@@ -17,7 +17,7 @@ ds_df <- read_triplets(dst, combine = TRUE)
 ref_files <- list.files("outputs/downsampling/reference", full.names = TRUE)
 ref_df_ds <- read_triplets(file2triplets(ref_files), combine = TRUE)
 ref_df_ds$chain <- lapply(ref_df_ds$file, readRDS)
-ds_df <- do_de(ds_df, ref_df_ds, "downsample_rate", data_dims, mc.cores = 12)
+ds_df <- do_de(ds_df, ref_df_ds, "downsample_rate", data_dims, mc.cores = getOption("mc.cores", 6))
 
 mdf_ds <- reshape2::melt(ds_df,
     measure.vars = c("pDiffExp", "pDiffDisp", "pDiffResDisp")

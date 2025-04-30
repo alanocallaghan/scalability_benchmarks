@@ -19,7 +19,7 @@ pes_all <- parallel::mclapply(
             epsilon = colMedians(chain@parameters$epsilon)
         )
     },
-    mc.cores = 8
+    mc.cores = getOption("mc.cores", 6)
 )
 
 pe_all <- bind_rows(pes_all)

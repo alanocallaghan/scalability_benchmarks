@@ -28,7 +28,7 @@ rm_df <- do_de(
     ref_df = ref_df_rm,
     match_column = "proportion_retained",
     data_dims,
-    mc.cores = 12
+    mc.cores = getOption("mc.cores", 6)
 )
 
 mdf_rm <- reshape2::melt(

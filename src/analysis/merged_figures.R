@@ -15,7 +15,7 @@ envs <- mclapply(files, function(file) {
     env <- new.env()
     load(file.path("rdata", file), envir = env)
     env
-}, mc.cores=4)
+}, mc.cores=getOption("mc.cores", 6))
 
 gs <- lapply(envs, function(env) {
     env$g
@@ -23,6 +23,9 @@ gs <- lapply(envs, function(env) {
 
 advi_mdf_de <- envs[[1]]$advi_mdf_de
 mdf_de <- envs[[1]]$mdf_de
+
+rm(envs); gc();
+
 gs[[1]] <- ggplot(mdf_de[!(is.na(mdf_de$chains) | mdf_de$chains == 1), ],
       aes(
           x = factor(chains),
@@ -49,7 +52,7 @@ gs[[1]] <- ggplot(mdf_de[!(is.na(mdf_de$chains) | mdf_de$chains == 1), ],
     facet_wrap(~data_desc, nrow = 2, ncol = 2, scales = "free_y") +
     scale_x_discrete(name = "Number of subsets") +
     scale_y_continuous(
-        name = "Portion of genes differentially expressed",
+        name = "Portion of genes\ndifferentially expressed",
         labels = scales::percent
     ) +
     theme(
@@ -61,6 +64,13 @@ gs[[1]] <- ggplot(mdf_de[!(is.na(mdf_de$chains) | mdf_de$chains == 1), ],
 
 gs <- lapply(gs, function(g) g + scale_color_brewer(name = "Parameter", palette = "Dark2"))
 
+gs[3:4] <- lapply(gs[3:4], function(g) {
+    g + scale_y_continuous(
+        name = "Spuriously differentially\nexpressed genes",
+        labels = scales::percent
+    )
+})
+
 wrap_elements(plot=gs[[1]] + guides(colour = "none")) + gs[[2]] + gs[[3]] + gs[[4]] +
     plot_layout(guides="collect") +
     plot_annotation(tag_level="A") &
@@ -68,4 +78,4 @@ wrap_elements(plot=gs[[1]] + guides(colour = "none")) + gs[[2]] + gs[[3]] + gs[[
 
 
 
-ggsave("figs/accuracy_plots.pdf", width=9, height=9)
+ggsave("figs/accuracy_plots.pdf", width=7.5, height=7.5)

@@ -30,6 +30,9 @@ if (args[["dataset"]] == "ibarra-soria") {
     plots <- lapply(names(fit_fix), function(celltype) {
         summary_var <- Summary(fit_var[[celltype]])
         summary_fix <- Summary(fit_fix[[celltype]])
+
+        ord <- order(summary_fix@parameters$mu[, "median"])
+        
         g1 <- plot_hpds(summary_var, summary_fix, "mu", ord)
         g2 <- plot_hpds(summary_var, summary_fix, "delta", ord)
         g3 <- plot_hpds(summary_var, summary_fix, "epsilon", ord)

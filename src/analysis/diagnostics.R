@@ -40,7 +40,7 @@ for (measure in c("ess", "geweke.diag")) {
                 delta = BASiCS:::.GetMeasure(chain, "delta", measure),
                 epsilon = BASiCS:::.GetMeasure(chain, "epsilon", measure)
             )
-        }, mc.cores = 4
+        }, mc.cores = getOption("mc.cores", 4)
     )
     diag_all <- bind_rows(diag_all_list)
     diag_all[which(diag_all[["chains"]] == 1), "by"] <- "Reference"
@@ -104,7 +104,7 @@ for (measure in c("ess", "geweke.diag")) {
     names(gs) <- c("mu", "delta", "epsilon")
     for (param in names(gs)) {
         ggsave(gs[[param]],
-            file = sprintf("figs/%s/%s_all.pdf", gsub("\\.", "_", measure), param),
+            file = sprintf("figs/%s_%s_all.pdf", gsub("\\.", "_", measure), param),
             width = 5, height = 4
         )
     }

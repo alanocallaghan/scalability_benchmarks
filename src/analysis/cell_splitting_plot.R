@@ -26,7 +26,7 @@ cs_df <- data.frame(
 cs_df <- merge(cs_df, data_dims)
 
 cs_de_df <- do_de(cs_df, ref_df = references, match_column = "data", data_dims,
-  mc.cores = 2)
+  mc.cores = getOption("mc.cores", 2))
 
 cs_de_df$chain <- NULL
 cs_de_df$data <- gsub("([\\w])([\\w]+)", "\\U\\1\\L\\2", cs_de_df$data, perl = TRUE)

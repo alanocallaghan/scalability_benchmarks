@@ -33,7 +33,7 @@ pos_metadata$test <- parallel::mclapply(seq_along(pos_metadata$file),
     function(i) {
         cat(i, "/", nrow(pos_metadata), "\n")
         readRDS(pos_metadata$file[[i]])$test
-    }, mc.cores = 12
+    }, mc.cores = getOption("mc.cores", 6)
 )
 
 params <- c("Mean", "Disp", "ResDisp")

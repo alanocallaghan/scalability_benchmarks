@@ -22,7 +22,7 @@ hpds_all <- parallel::mclapply(
             delta = get_hpd_width(chain, "delta"),
             epsilon = get_hpd_width(chain, "epsilon")
         )
-    }, mc.cores = 8
+    }, mc.cores = getOption("mc.cores", 6)
 )
 
 hpdf_all <- bind_rows(hpds_all)
