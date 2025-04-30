@@ -13,11 +13,9 @@
 # library("scran")
 # library("SingleCellExperiment")
 
-if [ -f "/etc/profile.d/modules.sh" ]; then
-    module load roslin/gcc/7.3.0
-fi
 
-mamba create -y -n scalability2 \
+conda create -n scalability \
+    gcc \
     r-base=4.1.1 \
     r-argparse \
     r-curl \
@@ -45,9 +43,11 @@ mamba create -y -n scalability2 \
 
 ## also need to devtools::install_github some stuff
 
-conda activate scalability2
+# mamba activate scalability
 Rscript -e 'BiocManager::install(c("BASiCS", "BiocParallel", "scater", "scran", "SingleCellExperiment", "scRNAseq"), version=3.14)'
 
-Rscript -e 'devtools::install_github("catavallejos/BASiCS", ref="11a03083be88d9900a168cd4ef7f41367f6fa4ed")'
+Rscript -e 'devtools::install_github("catavallejos/BASiCS", ref="49186bda2c5e410a87c9dd8e19d20310c97e5465")'
 Rscript -e 'devtools::install_github("Alanocallaghan/BASiCStan", ref="9e632610cf463c51d3856d763a89f555dc3c114c")'
-Rscript -e 'devtools::install_github("jorainer/ensembldb")'
+Rscript -e 'devtools::install_github("jorainer/ensembldb", ref="058be8a")'
+Rscript -e 'devtools::install_github("Bioconductor/BiocFileCache", ref="004cb8e")'
+Rscript -e 'install.packages("patchwork")'
